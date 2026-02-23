@@ -1,0 +1,560 @@
+{
+	"info": {
+		"_postman_id": "4a7b5c82-8d9e-4f01-b2c3-d4e5f67890ab",
+		"name": "InvoiceIQ API - Developer Edition",
+		"description": "Cette collection Postman est destinée aux développeurs intégrant l'API InvoiceIQ. Elle contient toutes les routes pour l'authentification, la validation, la transformation et la génération de documents Factur-X / PDF/A-3.\n\n### Authentification\nDeux modes sont supportés :\n1. **X-API-KEY** : Utilisez la variable `{{apiKey}}` dans le header `X-API-KEY`. Recommandé pour les appels serveur à serveur.\n2. **Bearer Token** : Utilisez la variable `{{authToken}}` générée après un login.\n\n### Variables de Collection\n- `baseUrl` : L'URL de l'API (ex: `https://api.invoiceiq.fr` ou `http://localhost:8080`)\n- `apiKey` : Votre clé d'API personnelle.\n- `authToken` : Token JWT (rempli automatiquement ou manuellement après login).",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Authentification",
+			"item": [
+				{
+					"name": "Inscription",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"dev@example.com\",\n  \"password\": \"MonPasswordSecurise123!\",\n  \"firstName\": \"Jean\",\n  \"lastName\": \"Dev\",\n  \"workspaceName\": \"Mon Workspace\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/auth/register",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"register"
+							]
+						},
+						"description": "Crée un nouveau compte utilisateur et un workspace associé. Un email de confirmation sera envoyé."
+					},
+					"response": []
+				},
+				{
+					"name": "Connexion (Login)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"if (jsonData.token) {",
+									"    pm.collectionVariables.set(\"authToken\", jsonData.token);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"dev@example.com\",\n  \"password\": \"MonPasswordSecurise123!\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/auth/login",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"login"
+							]
+						},
+						"description": "S'authentifie et récupère un JWT. Le script de test Postman mettra automatiquement à jour la variable `{{authToken}}`."
+					},
+					"response": []
+				},
+				{
+					"name": "Demander Réinitialisation Password",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"dev@example.com\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/auth/password-reset/request",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"password-reset",
+								"request"
+							]
+						},
+						"description": "Initie la procédure de récupération de mot de passe."
+					},
+					"response": []
+				}
+			],
+			"description": "Gestion des accès et de la sécurité."
+		},
+		{
+			"name": "Validations",
+			"item": [
+				{
+					"name": "Valider un document (PDF/Factur-X)",
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "value",
+									"value": "{{apiKey}}",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "X-API-KEY",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Idempotency-Key",
+								"value": "{{$guid}}",
+								"description": "Évite les doubles traitements en cas de retry réseau.",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"description": "Le fichier PDF ou XML Factur-X à valider.",
+									"type": "file",
+									"src": []
+								},
+								{
+									"key": "callbackUrl",
+									"value": "https://votre-webhook.com/callback",
+									"description": "URL appelée une fois la validation terminée.",
+									"type": "text"
+								},
+								{
+									"key": "referenceId",
+									"value": "EXT-REF-123",
+									"description": "Votre référence interne pour ce document.",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/v1/validations",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"v1",
+								"validations"
+							]
+						},
+						"description": "Analyse la conformité d'un document par rapport au standard Factur-X. Coût : 1 crédit."
+					},
+					"response": []
+				},
+				{
+					"name": "Récupérer un rapport de validation",
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "value",
+									"value": "{{apiKey}}",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "X-API-KEY",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/v1/validations/:id/report",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"v1",
+								"validations",
+								":id",
+								"report"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "uuid-du-job",
+									"description": "ID retourné lors de la création de la validation."
+								}
+							]
+						},
+						"description": "Récupère les détails techniques des erreurs de conformité détectées."
+					},
+					"response": []
+				},
+				{
+					"name": "Lister les validations",
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "value",
+									"value": "{{apiKey}}",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "X-API-KEY",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/v1/validations?page=0&limit=50&status=COMPLETED",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"v1",
+								"validations"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "limit",
+									"value": "50"
+								},
+								{
+									"key": "status",
+									"value": "COMPLETED"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Transformation",
+			"item": [
+				{
+					"name": "PDF vers Factur-X (BASIC)",
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "value",
+									"value": "{{apiKey}}",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "X-API-KEY",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": []
+								},
+								{
+									"key": "metadata",
+									"value": "{\n  \"invoiceNumber\": \"INV-2024-001\",\n  \"issueDate\": \"2024-02-22\",\n  \"currency\": \"EUR\",\n  \"typeCode\": \"380\",\n  \"seller\": {\n    \"name\": \"Ma Société\",\n    \"registrationId\": \"12345678901234\",\n    \"vatId\": \"FR12345678901\",\n    \"countryCode\": \"FR\",\n    \"address\": {\n      \"line1\": \"123 Rue de la Paix\",\n      \"city\": \"Paris\",\n      \"postCode\": \"75001\",\n      \"countryCode\": \"FR\"\n    }\n  },\n  \"buyer\": {\n    \"name\": \"Client SAS\",\n    \"countryCode\": \"FR\",\n    \"address\": {\n      \"city\": \"Lyon\",\n      \"postCode\": \"69001\",\n      \"countryCode\": \"FR\"\n    }\n  },\n  \"lines\": [\n    {\n      \"id\": \"1\",\n      \"name\": \"Prestation Service\",\n      \"quantity\": 1,\n      \"netPrice\": 1000,\n      \"taxRate\": 0,\n      \"taxCategoryCode\": \"E\",\n      \"taxExemptionReason\": \"Exonération de TVA, art. 262 ter I du CGI\",\n      \"totalAmount\": 1000\n    }\n  ],\n  \"totalTaxExclusiveAmount\": 1000,\n  \"taxTotalAmount\": 0,\n  \"totalTaxInclusiveAmount\": 1000,\n  \"taxes\": [\n    {\n      \"taxRate\": 0,\n      \"basisAmount\": 1000,\n      \"taxAmount\": 0,\n      \"taxCategoryCode\": \"E\",\n      \"taxExemptionReason\": \"Exonération de TVA, art. 262 ter I du CGI\"\n    }\n  ]\n}",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/transformations",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"transformations"
+							]
+						},
+						"description": "Prend un PDF simple et les données JSON pour injecter le XML Factur-X conforme. Coût : 5 crédits."
+					},
+					"response": []
+				},
+				{
+					"name": "Suivre un Job de Transformation",
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "value",
+									"value": "{{apiKey}}",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "X-API-KEY",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/transformations/:jobId",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"transformations",
+								":jobId"
+							],
+							"variable": [
+								{
+									"key": "jobId",
+									"value": ""
+								}
+							]
+						},
+						"description": "Vérifie si le traitement est terminé et récupère l'URL de téléchargement."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Correction",
+			"item": [
+				{
+					"name": "Réparer un Factur-X",
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "value",
+									"value": "{{apiKey}}",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "X-API-KEY",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": []
+								},
+								{
+									"key": "mode",
+									"value": "auto",
+									"description": "'auto' utilise Doc AI pour corriger les champs manquants.",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/corrections",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"corrections"
+							]
+						},
+						"description": "Tente de réparer automatiquement un PDF Factur-X non conforme. Coût : 5 crédits."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Génération",
+			"item": [
+				{
+					"name": "Générer Factur-X de A à Z",
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "value",
+									"value": "{{apiKey}}",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "X-API-KEY",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"invoiceNumber\": \"F-2024-42\",\n  \"issueDate\": \"2024-02-22\",\n  \"currency\": \"EUR\",\n  \"seller\": {\n    \"name\": \"InvoiceIQ Corp\",\n    \"addressLine1\": \"1 API Way\",\n    \"city\": \"San Francisco\",\n    \"countryCode\": \"US\"\n  },\n  \"buyer\": {\n    \"name\": \"Global Soft\",\n    \"addressLine1\": \"500 Main St\",\n    \"city\": \"New York\",\n    \"countryCode\": \"US\"\n  },\n  \"lines\": [\n    {\n      \"name\": \"Support technique\",\n      \"quantity\": 2,\n      \"unitPrice\": 150.00,\n      \"taxRate\": 0,\n      \"taxCategoryCode\": \"E\",\n      \"taxExemptionReason\": \"Art. 293 B du CGI\"\n    }\n  ],\n  \"totalTaxExclusiveAmount\": 300,\n  \"taxTotalAmount\": 0,\n  \"totalTaxInclusiveAmount\": 300,\n  \"taxSummaries\": [\n    {\n      \"taxRate\": 0,\n      \"taxableAmount\": 300,\n      \"taxAmount\": 0,\n      \"taxCategoryCode\": \"E\",\n      \"taxExemptionReason\": \"Art. 293 B du CGI\"\n    }\n  ],\n  \"rendering\": {\n    \"template\": \"classic-01\",\n    \"primaryColor\": \"#1e293b\",\n    \"logo\": {\n      \"url\": \"https://example.com/logo.png\",\n      \"width\": 120\n    }\n  }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/generations",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"generations"
+							]
+						},
+						"description": "Génère le PDF visuel ET le XML à partir d'un template. Coût : 10 crédits."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Validations Publiques (Sans Auth)",
+			"item": [
+				{
+					"name": "Test Public Rapide",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Origin",
+								"value": "https://www.invoiceiq.fr",
+								"description": "Requis pour passer la sécurité CORS du site officiel.",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": []
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/v1/free-validations",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"v1",
+								"free-validations"
+							]
+						},
+						"description": "Validation limitée (1 / 15 min) ne nécessitant pas de compte. Uniquement pour tests rapides."
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "https://api.invoiceiq.fr",
+			"type": "string"
+		},
+		{
+			"key": "apiKey",
+			"value": "votre_cle_api_ici",
+			"type": "string"
+		},
+		{
+			"key": "authToken",
+			"value": "",
+			"type": "string"
+		}
+	]
+}

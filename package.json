@@ -1,0 +1,38 @@
+{
+  "name": "@invoiceiq/sdk",
+  "version": "1.0.0",
+  "description": "SDK Node.js pour l'API InvoiceIQ - Transformation et génération de factures Factur-X",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "invoiceiq",
+    "facturx",
+    "invoice",
+    "pdf",
+    "api",
+    "sdk"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/jest": "^29.5.12",
+    "@types/node": "^20.11.19",
+    "jest": "^29.7.0",
+    "nock": "^13.5.1",
+    "ts-jest": "^29.1.2",
+    "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "form-data": "^4.0.0"
+  }
+}

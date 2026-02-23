@@ -1,0 +1,263 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "InvoiceIQ API",
+    "description": "API de validation, transformation et génération de documents Factur-X / PDF/A-3.\n\n### Authentification\nCette API supporte deux types d'authentification :\n- **Bearer Auth (JWT)** : Pour les sessions utilisateurs classiques.\n- **X-API-KEY** : Pour les intégrations serveur à serveur.\n\n### Facturation & Crédits\nChaque opération (Validation, Transformation, Correction) consomme des crédits de votre workspace.",
+    "contact": {
+      "name": "Support InvoiceIQ",
+      "url": "https://www.invoiceiq.fr",
+      "email": "support@invoiceiq.fr"
+    },
+    "license": {
+      "name": "Proprietary",
+      "url": "https://www.invoiceiq.fr/terms"
+    },
+    "version": "0.1.0"
+  },
+  "servers": [
+    {
+      "url": "https://api.invoiceiq.fr",
+      "description": "Production"
+    },
+    {
+      "url": "http://localhost:8080",
+      "description": "Local development"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Authentification",
+      "description": "Gestion du compte et tokens"
+    },
+    {
+      "name": "Validations",
+      "description": "Analyse de conformité Factur-X"
+    },
+    {
+      "name": "Transformation",
+      "description": "Service de transformation PDF vers Factur-X"
+    },
+    {
+      "name": "Correction",
+      "description": "Réparation automatique de factures"
+    },
+    {
+      "name": "Validations gratuites",
+      "description": "Test public (limité)"
+    },
+    {
+      "name": "Generation",
+      "description": "Service de génération intégrale de Factur-X"
+    }
+  ],
+  "paths": {
+    "/api/v1/auth/register": {
+      "post": {
+        "tags": [
+          "Authentification"
+        ],
+        "summary": "S'inscrire sur la plateforme",
+        "description": "Crée un nouvel utilisateur et un workspace par défaut",
+        "operationId": "register",
+        "responses": {
+          "200": {
+            "description": "Utilisateur créé avec succès"
+          },
+          "400": {
+            "description": "Données d'inscription invalides"
+          }
+        }
+      }
+    },
+    "/api/v1/auth/login": {
+      "post": {
+        "tags": [
+          "Authentification"
+        ],
+        "summary": "Se connecter",
+        "description": "Renvoie un token JWT si les identifiants sont valides",
+        "operationId": "login",
+        "responses": {
+          "200": {
+            "description": "Connexion réussie"
+          },
+          "401": {
+            "description": "Identifiants invalides"
+          }
+        }
+      }
+    },
+    "/v1/validations": {
+      "get": {
+        "tags": [
+          "Validations"
+        ],
+        "summary": "Lister les validations (pagination et filtres)",
+        "operationId": "listValidations",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Validations"
+        ],
+        "summary": "Valider un document (Factur-X ou PDF)",
+        "description": "Analyse la conformité d'un PDF par rapport au standard Factur-X / ZUGFeRD. Coût: 1 crédit.",
+        "operationId": "createValidation",
+        "responses": {
+          "201": {
+            "description": "Validation créée avec succès"
+          },
+          "400": {
+            "description": "Fichier invalide"
+          },
+          "401": {
+            "description": "Non authentifié"
+          },
+          "402": {
+            "description": "Crédits insuffisants (1 requis)"
+          }
+        }
+      }
+    },
+    "/api/v1/transformations": {
+      "get": {
+        "tags": [
+          "Transformation"
+        ],
+        "summary": "Lister les jobs de transformation (pagination et filtres)",
+        "operationId": "listTransformations",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Transformation"
+        ],
+        "summary": "Transformer un PDF simple en Factur-X en incluant des métadonnées JSON",
+        "description": "Génère un XML Factur-X (BASIC) à partir des métadonnées JSON fournies et l'attache au PDF source. Coût: 5 crédits.",
+        "operationId": "createTransformation",
+        "responses": {
+          "200": {
+            "description": "Transformation terminée avec succès"
+          },
+          "202": {
+            "description": "Transformation acceptée et en cours de traitement asynchrone"
+          },
+          "400": {
+            "description": "Le JSON de métadonnées est malformé ou le fichier PDF est corrompu"
+          },
+          "401": {
+            "description": "Non authentifié"
+          },
+          "402": {
+            "description": "Le solde du compte est insuffisant (5 crédits requis)"
+          }
+        }
+      }
+    },
+    "/api/v1/generations": {
+      "get": {
+        "tags": [
+          "Generation"
+        ],
+        "summary": "Lister les jobs de génération (pagination et filtres)",
+        "operationId": "listGenerations",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Generation"
+        ],
+        "summary": "Générer une facture Factur-X complète à partir d'un JSON",
+        "description": "Génère un document PDF hybride contenant le rendu visuel et les métadonnées XML Factur-X (EXTENDED). Coût: 10 crédits.",
+        "operationId": "createGeneration",
+        "responses": {
+          "200": {
+            "description": "Génération terminée avec succès"
+          },
+          "202": {
+            "description": "Génération acceptée et en cours de traitement"
+          },
+          "400": {
+            "description": "Données d'entrée invalides ou template inconnu"
+          },
+          "401": {
+            "description": "Non authentifié"
+          },
+          "402": {
+            "description": "Crédits insuffisants (10 requis)"
+          }
+        }
+      }
+    },
+    "/v1/free-validations": {
+      "post": {
+        "tags": [
+          "Validations gratuites"
+        ],
+        "summary": "Créer une validation gratuite",
+        "description": "Permet de tester la validation Factur-X sans compte.",
+        "operationId": "createFreeValidation",
+        "responses": {
+          "201": {
+            "description": "Validation créée avec succès"
+          },
+          "403": {
+            "description": "Origine non autorisée"
+          },
+          "429": {
+            "description": "Limite de débit atteinte (1 req / 15 min)"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "TransformationMetadataDto": {
+        "type": "object",
+        "properties": {
+          "invoiceNumber": { "type": "string", "example": "INV-2024-001" },
+          "issueDate": { "type": "string", "format": "date", "example": "2024-02-22" },
+          "currency": { "type": "string", "example": "EUR" },
+          "typeCode": { "type": "string", "example": "380" },
+          "taxCategoryCode": { "type": "string", "description": "S=Standard, E=Exempté...", "example": "S" },
+          "taxExemptionReason": { "type": "string", "description": "Mention légale d'exonération", "example": "Art. 293 B du CGI" }
+        }
+      },
+      "GenerationPayloadDto": {
+        "type": "object",
+        "properties": {
+          "invoiceNumber": { "type": "string", "example": "F-2024-42" },
+          "issueDate": { "type": "string", "format": "date", "example": "2024-02-22" },
+          "currency": { "type": "string", "example": "EUR" },
+          "taxCategoryCode": { "type": "string", "example": "S" },
+          "taxExemptionReason": { "type": "string", "example": "Art. 293 B du CGI" }
+        }
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      },
+      "apiKey": {
+        "type": "apiKey",
+        "name": "X-API-KEY",
+        "in": "header"
+      }
+    }
+  }
+}

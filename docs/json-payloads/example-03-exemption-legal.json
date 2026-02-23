@@ -1,0 +1,62 @@
+{
+  "invoiceNumber": "F-2024-MICRO-01",
+  "issueDate": "2024-02-22",
+  "dueDate": "2024-03-22",
+  "currency": "EUR",
+  "seller": {
+    "name": "Jean Dupont Consultant",
+    "registrationId": "88990011223344",
+    "addressLine1": "15 Rue de l'Artisanat",
+    "postCode": "33000",
+    "city": "Bordeaux",
+    "countryCode": "FR",
+    "email": "contact@jd-consulting.fr"
+  },
+  "buyer": {
+    "name": "Association Culturelle Locale",
+    "addressLine1": "Mairie de Bordeaux",
+    "postCode": "33000",
+    "city": "Bordeaux",
+    "countryCode": "FR"
+  },
+  "lines": [
+    {
+      "id": "1",
+      "name": "Formation Gestion Projet",
+      "description": "Session d'accompagnement pour les bénévoles",
+      "quantity": 2,
+      "unitCode": "DAY",
+      "unitPrice": 450.00,
+      "taxRate": 0.0,
+      "taxCategoryCode": "E",
+      "taxExemptionReason": "TVA non applicable, art. 293 B du CGI",
+      "totalAmount": 900.00
+    }
+  ],
+  "totalTaxExclusiveAmount": 900.00,
+  "taxTotalAmount": 0.00,
+  "totalTaxInclusiveAmount": 900.00,
+  "taxSummaries": [
+    {
+      "taxRate": 0.0,
+      "taxableAmount": 900.00,
+      "taxAmount": 0.00,
+      "taxCategoryCode": "E",
+      "taxExemptionReason": "TVA non applicable, art. 293 B du CGI"
+    }
+  ],
+  "notes": "Micro-entrepreneur : TVA non applicable, art. 293 B du CGI.",
+  "paymentMeans": {
+    "typeCode": "30",
+    "accountIBAN": "FR7699988877766655544433322",
+    "accountBIC": "MICROFR75",
+    "accountName": "Jean Dupont"
+  },
+  "rendering": {
+    "template": "classic-01",
+    "primaryColor": "#065f46",
+    "footer": {
+      "extraText": "Jean Dupont EI - SIRET 889 900 112 23344 - Dispensé d'immatriculation au RCS"
+    }
+  }
+}

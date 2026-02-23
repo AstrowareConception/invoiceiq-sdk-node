@@ -1,0 +1,97 @@
+{
+  "invoiceNumber": "INV-2024-8842",
+  "issueDate": "2024-02-20",
+  "dueDate": "2024-03-20",
+  "currency": "EUR",
+  "seller": {
+    "name": "TechSupply Distribution SARL",
+    "registrationId": "55223344500098",
+    "vatId": "FR55522334455",
+    "addressLine1": "Zone Industrielle Sud",
+    "addressLine2": "Entrepôt 4B",
+    "postCode": "31000",
+    "city": "Toulouse",
+    "countryCode": "FR"
+  },
+  "buyer": {
+    "name": "E-Shop Pro",
+    "registrationId": "33445566700012",
+    "vatId": "FR33334455667",
+    "addressLine1": "10 Rue du Commerce",
+    "postCode": "69002",
+    "city": "Lyon",
+    "countryCode": "FR"
+  },
+  "lines": [
+    {
+      "id": "1",
+      "name": "Écran PC 27\" UltraSharp",
+      "description": "Dalle IPS 4K - Réf: US27-4K",
+      "quantity": 10,
+      "unitCode": "C62",
+      "unitPrice": 350.00,
+      "taxRate": 20.0,
+      "taxCategoryCode": "S",
+      "totalAmount": 3500.00
+    },
+    {
+      "id": "2",
+      "name": "Clavier Mécanique Sans Fil",
+      "description": "Switches Cherry MX Blue - Réf: KB-MECH-BT",
+      "quantity": 25,
+      "unitCode": "C62",
+      "unitPrice": 85.00,
+      "taxRate": 20.0,
+      "taxCategoryCode": "S",
+      "totalAmount": 2125.00
+    },
+    {
+      "id": "3",
+      "name": "Frais de port (Palette)",
+      "description": "Livraison express 24h",
+      "quantity": 1,
+      "unitCode": "C62",
+      "unitPrice": 120.00,
+      "taxRate": 20.0,
+      "taxCategoryCode": "S",
+      "totalAmount": 120.00
+    },
+    {
+      "id": "4",
+      "name": "Eco-participation écrans",
+      "description": "Contribution environnementale DEEE",
+      "quantity": 10,
+      "unitCode": "C62",
+      "unitPrice": 2.50,
+      "taxRate": 20.0,
+      "taxCategoryCode": "S",
+      "totalAmount": 25.00
+    }
+  ],
+  "totalTaxExclusiveAmount": 5770.00,
+  "taxTotalAmount": 1154.00,
+  "totalTaxInclusiveAmount": 6924.00,
+  "taxSummaries": [
+    {
+      "taxRate": 20.0,
+      "taxableAmount": 5770.00,
+      "taxAmount": 1154.00,
+      "taxCategoryCode": "S"
+    }
+  ],
+  "notes": "Bon de commande client : BC-2024-442. Livraison effectuée le 19/02/2024.",
+  "paymentMeans": {
+    "typeCode": "30",
+    "accountIBAN": "FR7612345678901234567890123",
+    "accountBIC": "TECHSUP75",
+    "accountName": "TechSupply Distribution SARL"
+  },
+  "rendering": {
+    "template": "classic-01",
+    "primaryColor": "#0f172a",
+    "logo": {
+      "url": "https://invoiceiq.fr/assets/demo/logo-techsupply.png",
+      "width": 180
+    }
+  }
+}

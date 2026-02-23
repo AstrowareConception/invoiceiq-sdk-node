@@ -1,0 +1,48 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Rendering Options for Invoice Generation",
+  "type": "object",
+  "properties": {
+    "template": {
+      "type": "string",
+      "enum": ["classic-01"],
+      "default": "classic-01"
+    },
+    "font": {
+      "type": "string",
+      "enum": ["Helvetica", "Times", "Courier", "DejaVuSans"],
+      "default": "Helvetica"
+    },
+    "primaryColor": {
+      "type": "string",
+      "pattern": "^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$",
+      "default": "#0F172A"
+    },
+    "accentColor": {
+      "type": "string",
+      "pattern": "^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$",
+      "default": "#2563EB"
+    },
+    "logo": {
+      "type": "object",
+      "properties": {
+        "url": { "type": "string", "format": "uri-reference" },
+        "width": { "type": "integer", "minimum": 10, "maximum": 500 },
+        "align": { "type": "string", "enum": ["left", "center", "right"] }
+      }
+    },
+    "footer": {
+      "type": "object",
+      "properties": {
+        "extraText": { "type": "string" },
+        "showPageNumbers": { "type": "boolean", "default": true }
+      }
+    },
+    "locale": {
+      "type": "string",
+      "pattern": "^[a-z]{2}-[A-Z]{2}$",
+      "default": "fr-FR"
+    },
+    "notes": { "type": "string" }
+  }
+}

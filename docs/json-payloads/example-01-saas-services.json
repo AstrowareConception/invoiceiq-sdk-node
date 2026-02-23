@@ -1,0 +1,95 @@
+{
+  "invoiceNumber": "F-2024-00125",
+  "issueDate": "2024-02-15",
+  "dueDate": "2024-03-15",
+  "currency": "EUR",
+  "seller": {
+    "name": "CloudLabs Infrastructure SAS",
+    "registrationId": "98765432100012",
+    "vatId": "FR987654321",
+    "addressLine1": "12 Avenue de l'Innovation",
+    "addressLine2": "Immeuble Le Delta",
+    "postCode": "75013",
+    "city": "Paris",
+    "countryCode": "FR",
+    "email": "billing@cloudlabs.io"
+  },
+  "buyer": {
+    "name": "Global Soft Corp",
+    "registrationId": "12345678900056",
+    "vatId": "FR123456789",
+    "addressLine1": "500 Boulevard de la Croisette",
+    "postCode": "06400",
+    "city": "Cannes",
+    "countryCode": "FR",
+    "email": "finance@globalsoft.com"
+  },
+  "lines": [
+    {
+      "id": "1",
+      "name": "Abonnement Premium SaaS - Annuel",
+      "description": "Accès plateforme CloudLabs pour 25 utilisateurs (Période: Mars 2024 - Février 2025)",
+      "quantity": 1,
+      "unitCode": "C62",
+      "unitPrice": 4500.00,
+      "taxRate": 20.0,
+      "taxCategoryCode": "S",
+      "totalAmount": 4500.00
+    },
+    {
+      "id": "2",
+      "name": "Crédits API Supplémentaires",
+      "description": "Pack de 10 000 appels API valables 1 an",
+      "quantity": 2,
+      "unitCode": "C62",
+      "unitPrice": 250.00,
+      "taxRate": 20.0,
+      "taxCategoryCode": "S",
+      "totalAmount": 500.00
+    },
+    {
+      "id": "3",
+      "name": "Consulting Architecture Cloud",
+      "description": "Audit de performance infrastructure (3 jours)",
+      "quantity": 3,
+      "unitCode": "DAY",
+      "unitPrice": 950.00,
+      "taxRate": 20.0,
+      "taxCategoryCode": "S",
+      "totalAmount": 2850.00
+    }
+  ],
+  "totalTaxExclusiveAmount": 7850.00,
+  "taxTotalAmount": 1570.00,
+  "totalTaxInclusiveAmount": 9420.00,
+  "taxSummaries": [
+    {
+      "taxRate": 20.0,
+      "taxableAmount": 7850.00,
+      "taxAmount": 1570.00,
+      "taxCategoryCode": "S"
+    }
+  ],
+  "notes": "Paiement par virement bancaire sous 30 jours. Merci de votre confiance.",
+  "paymentMeans": {
+    "typeCode": "30",
+    "accountIBAN": "FR7630006000011234567890123",
+    "accountBIC": "CLOUDLABS75",
+    "accountName": "CloudLabs Infrastructure SAS"
+  },
+  "rendering": {
+    "template": "classic-01",
+    "primaryColor": "#1e293b",
+    "accentColor": "#3b82f6",
+    "logo": {
+      "url": "https://invoiceiq.fr/assets/demo/logo-cloudlabs.png",
+      "width": 150,
+      "align": "left"
+    },
+    "footer": {
+      "extraText": "CloudLabs Infrastructure SAS - Capital 50 000€ - SIREN 987 654 321 - RCS Paris",
+      "showPageNumbers": true
+    },
+    "locale": "fr-FR"
+  }
+}
