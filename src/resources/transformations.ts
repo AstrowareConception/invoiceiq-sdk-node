@@ -1,7 +1,7 @@
 import { HttpClient } from '../client';
 import { TransformationJob, InvoiceMetadata, PaginatedResponse, ListOptions, ValidationReport } from '../types';
 import * as fs from 'fs';
-import * as FormData from 'form-data';
+import FormData from 'form-data';
 
 export class TransformationsResource {
   constructor(private client: HttpClient) {}

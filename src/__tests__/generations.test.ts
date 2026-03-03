@@ -1,7 +1,7 @@
 import { GenerationsResource } from '../resources/generations';
 import { HttpClient } from '../client';
 import { InvoiceMetadata } from '../types';
-import * as nock from 'nock';
+import nock from 'nock';
 
 describe('GenerationsResource', () => {
   let client: HttpClient;
@@ -56,7 +56,7 @@ describe('GenerationsResource', () => {
         createdAt: '2024-02-22T10:00:00Z',
       };
 
-      nock(baseUrl).post('/api/v1/generations', metadata).reply(202, mockJob);
+      nock(baseUrl).post('/api/v1/generations').reply(202, mockJob);
 
       const result = await generations.create(metadata);
       expect(result.id).toBe('g_new');

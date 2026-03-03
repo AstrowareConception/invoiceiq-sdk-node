@@ -1,7 +1,7 @@
 import { TransformationsResource } from '../resources/transformations';
 import { HttpClient } from '../client';
 import { InvoiceMetadata } from '../types';
-import * as nock from 'nock';
+import nock from 'nock';
 
 describe('TransformationsResource', () => {
   let client: HttpClient;

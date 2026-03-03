@@ -1,5 +1,5 @@
 import { HttpClient } from '../client';
-import * as nock from 'nock';
+import nock from 'nock';
 
 describe('HttpClient', () => {
   let client: HttpClient;

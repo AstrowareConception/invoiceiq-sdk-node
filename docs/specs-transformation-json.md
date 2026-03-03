@@ -63,37 +63,6 @@ Le format JSON est conçu pour être proche de la norme sémantique européenne 
 | `totalTaxInclusiveAmount`| Number | Total Toutes Taxes Comprises (TTC). **Requis**. |
 | `taxTotalAmount` | Number | Montant total de la taxe (TVA). **Requis**. |
 | `purchaseOrderReference`| String | Référence du bon de commande. |
-| `rendering` | Object | Options de rendu pour génération PDF (voir ci-dessous). |
-
-### Options de rendu (Rendering)
-
-L'objet `rendering` est optionnel. S'il est fourni sans fichier PDF source, l'API génère la facture à partir d'un template.
-
-| Champ | Type | Description |
-| :--- | :--- | :--- |
-| `template` | String | Identifiant du template (ex: `"classic-01"`). |
-| `font` | String | Police : `"Helvetica"`, `"Times"`, `"Courier"`. |
-| `primaryColor` | String | Couleur principale (ex: `"#0F172A"`). |
-| `accentColor` | String | Couleur d'accentuation (ex: `"#2563EB"`). |
-| `logo` | Object | Configuration du logo (voir ci-dessous). |
-| `footer` | Object | Configuration du pied de page (voir ci-dessous). |
-| `notes` | String | Notes libres affichées sur la facture. |
-| `locale` | String | Locale pour formats (ex: `"fr-FR"`). |
-
-#### Logo
-
-| Champ | Type | Description |
-| :--- | :--- | :--- |
-| `url` | String | URL du logo (HTTPS ou base64). |
-| `width` | Number | Largeur en pixels. |
-| `align` | String | `"left"`, `"center"`, `"right"`. |
-
-#### Pied de page (Footer)
-
-| Champ | Type | Description |
-| :--- | :--- | :--- |
-| `extraText` | String | Mentions légales, SIRET, etc. |
-| `showPageNumbers`| Boolean| Afficher la pagination. |
 
 ### Parties (Seller / Buyer)
 
@@ -178,6 +147,7 @@ L'objet `rendering` est optionnel. S'il est fourni sans fichier PDF source, l'AP
       "unitCode": "C62",
       "netPrice": 100.00,
       "taxRate": 20.00,
+      "taxCategoryCode": "S",
       "totalAmount": 100.00
     },
     {
@@ -187,6 +157,7 @@ L'objet `rendering` est optionnel. S'il est fourni sans fichier PDF source, l'AP
       "unitCode": "C62",
       "netPrice": 25.00,
       "taxRate": 20.00,
+      "taxCategoryCode": "S",
       "totalAmount": 25.00
     }
   ],
@@ -194,28 +165,14 @@ L'objet `rendering` est optionnel. S'il est fourni sans fichier PDF source, l'AP
     {
       "taxRate": 20.00,
       "basisAmount": 125.00,
-      "taxAmount": 25.00
+      "taxAmount": 25.00,
+      "taxCategoryCode": "S"
     }
   ],
   "totalTaxExclusiveAmount": 125.00,
   "taxTotalAmount": 25.00,
-  "totalTaxInclusiveAmount": 150.00,
-  "rendering": {
-    "template": "classic-01",
-    "font": "Helvetica",
-    "primaryColor": "#0F172A",
-    "accentColor": "#2563EB",
-    "logo": {
-      "url": "https://cdn.example.com/logo.png",
-      "width": 120,
-      "align": "left"
-    },
-    "footer": {
-      "extraText": "InvoiceLabs SAS - SIRET 12345678900012",
-      "showPageNumbers": true
-    },
-    "notes": "Merci pour votre confiance !",
-    "locale": "fr-FR"
-  }
+  "totalTaxInclusiveAmount": 150.00
 }
 ```
+
+**Note importante** : L'objet `rendering` (qui contient `template`, `logo`, `footer`, etc.) n'est **pas supporté** dans l'endpoint de transformation. Il est uniquement utilisé pour l'endpoint de génération `/api/v1/generations`.

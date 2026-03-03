@@ -227,23 +227,164 @@
     "schemas": {
       "TransformationMetadataDto": {
         "type": "object",
+        "required": ["invoiceNumber", "issueDate", "seller", "buyer", "totalTaxExclusiveAmount", "totalTaxInclusiveAmount", "taxTotalAmount"],
         "properties": {
           "invoiceNumber": { "type": "string", "example": "INV-2024-001" },
           "issueDate": { "type": "string", "format": "date", "example": "2024-02-22" },
           "currency": { "type": "string", "example": "EUR" },
           "typeCode": { "type": "string", "example": "380" },
+          "seller": { "$ref": "#/components/schemas/PartyDto" },
+          "buyer": { "$ref": "#/components/schemas/PartyDto" },
+          "lines": { "type": "array", "items": { "$ref": "#/components/schemas/InvoiceLineDto" } },
+          "taxes": { "type": "array", "items": { "$ref": "#/components/schemas/TaxSummaryDto" } },
+          "totalTaxExclusiveAmount": { "type": "number", "example": 1000.00 },
+          "totalTaxInclusiveAmount": { "type": "number", "example": 1200.00 },
+          "taxTotalAmount": { "type": "number", "example": 200.00 },
+          "purchaseOrderReference": { "type": "string", "example": "PO-2024-123" }
+        }
+      },
+      "PartyDto": {
+        "type": "object",
+        "required": ["name", "countryCode"],
+        "properties": {
+          "name": { "type": "string", "example": "Ma Société SAS" },
+          "registrationId": { "type": "string", "example": "12345678901234" },
+          "vatId": { "type": "string", "example": "FR12345678901" },
+          "countryCode": { "type": "string", "example": "FR" },
+          "address": { "$ref": "#/components/schemas/AddressDto" }
+        }
+      },
+      "AddressDto": {
+        "type": "object",
+        "properties": {
+          "line1": { "type": "string", "example": "123 Rue de la Paix" },
+          "line2": { "type": "string", "example": "Bâtiment B" },
+          "city": { "type": "string", "example": "Paris" },
+          "postCode": { "type": "string", "example": "75001" },
+          "countryCode": { "type": "string", "example": "FR" }
+        }
+      },
+      "InvoiceLineDto": {
+        "type": "object",
+        "required": ["name", "quantity", "netPrice", "totalAmount"],
+        "properties": {
+          "id": { "type": "string", "example": "1" },
+          "name": { "type": "string", "example": "Consulting Cloud" },
+          "description": { "type": "string", "example": "Accompagnement architecture AWS" },
+          "quantity": { "type": "number", "example": 5 },
+          "unitCode": { "type": "string", "example": "HUR" },
+          "netPrice": { "type": "number", "example": 200.00 },
+          "taxRate": { "type": "number", "example": 20.0 },
           "taxCategoryCode": { "type": "string", "description": "S=Standard, E=Exempté...", "example": "S" },
-          "taxExemptionReason": { "type": "string", "description": "Mention légale d'exonération", "example": "Art. 293 B du CGI" }
+          "taxExemptionReason": { "type": "string", "description": "Mention légale d'exonération", "example": "Art. 262 ter I du CGI" },
+          "totalAmount": { "type": "number", "example": 1000.00 }
+        }
+      },
+      "TaxSummaryDto": {
+        "type": "object",
+        "properties": {
+          "taxRate": { "type": "number", "example": 20.0 },
+          "basisAmount": { "type": "number", "example": 1000.00 },
+          "taxAmount": { "type": "number", "example": 200.00 },
+          "taxCategoryCode": { "type": "string", "example": "S" },
+          "taxExemptionReason": { "type": "string", "example": "Auto-liquidation" }
         }
       },
       "GenerationPayloadDto": {
         "type": "object",
+        "required": ["invoiceNumber", "issueDate", "seller", "buyer", "totalTaxExclusiveAmount", "totalTaxInclusiveAmount", "taxTotalAmount"],
         "properties": {
           "invoiceNumber": { "type": "string", "example": "F-2024-42" },
           "issueDate": { "type": "string", "format": "date", "example": "2024-02-22" },
+          "dueDate": { "type": "string", "format": "date", "example": "2024-03-22" },
           "currency": { "type": "string", "example": "EUR" },
+          "templateId": { "type": "string", "example": "classic-01" },
+          "seller": { "$ref": "#/components/schemas/PartyDetailDto" },
+          "buyer": { "$ref": "#/components/schemas/PartyDetailDto" },
+          "lines": { "type": "array", "items": { "$ref": "#/components/schemas/GenerationInvoiceLineDto" } },
+          "totalTaxExclusiveAmount": { "type": "number", "example": 100.00 },
+          "totalTaxInclusiveAmount": { "type": "number", "example": 120.00 },
+          "taxTotalAmount": { "type": "number", "example": 20.00 },
+          "taxSummaries": { "type": "array", "items": { "$ref": "#/components/schemas/GenerationTaxSummaryDto" } },
+          "notes": { "type": "string", "example": "Paiement à réception" },
+          "paymentMeans": { "$ref": "#/components/schemas/PaymentMeansDto" },
+          "rendering": { "$ref": "#/components/schemas/RenderingOptionsDto" }
+        }
+      },
+      "PartyDetailDto": {
+        "type": "object",
+        "required": ["name", "countryCode"],
+        "properties": {
+          "name": { "type": "string", "example": "InvoiceIQ Solutions" },
+          "registrationId": { "type": "string", "example": "98765432100012" },
+          "vatId": { "type": "string", "example": "FR987654321" },
+          "addressLine1": { "type": "string", "example": "12 Rue de l'Innovation" },
+          "addressLine2": { "type": "string", "example": "Bâtiment Pixel" },
+          "postCode": { "type": "string", "example": "33000" },
+          "city": { "type": "string", "example": "Bordeaux" },
+          "countryCode": { "type": "string", "example": "FR" },
+          "email": { "type": "string", "example": "billing@invoiceiq.io" }
+        }
+      },
+      "GenerationInvoiceLineDto": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "example": "1" },
+          "name": { "type": "string", "example": "Licence SaaS" },
+          "description": { "type": "string", "example": "Accès illimité" },
+          "quantity": { "type": "number", "example": 1 },
+          "unitCode": { "type": "string", "example": "PCE" },
+          "unitPrice": { "type": "number", "example": 1200.00 },
+          "taxRate": { "type": "number", "example": 20.0 },
           "taxCategoryCode": { "type": "string", "example": "S" },
-          "taxExemptionReason": { "type": "string", "example": "Art. 293 B du CGI" }
+          "taxExemptionReason": { "type": "string", "example": "Art. 262 ter I du CGI" },
+          "totalAmount": { "type": "number", "example": 1200.00 }
+        }
+      },
+      "GenerationTaxSummaryDto": {
+        "type": "object",
+        "properties": {
+          "taxRate": { "type": "number", "example": 20.0 },
+          "taxableAmount": { "type": "number", "example": 1200.00 },
+          "taxAmount": { "type": "number", "example": 240.00 },
+          "taxCategoryCode": { "type": "string", "example": "S" },
+          "taxExemptionReason": { "type": "string", "example": "Art. 262 ter I du CGI" }
+        }
+      },
+      "PaymentMeansDto": {
+        "type": "object",
+        "properties": {
+          "typeCode": { "type": "string", "example": "30" },
+          "accountIBAN": { "type": "string", "example": "FR76..." },
+          "accountBIC": { "type": "string", "example": "BCDEFR..." },
+          "accountName": { "type": "string", "example": "InvoiceIQ Corp" }
+        }
+      },
+      "RenderingOptionsDto": {
+        "type": "object",
+        "properties": {
+          "template": { "type": "string", "example": "classic-01" },
+          "font": { "type": "string", "example": "Helvetica" },
+          "primaryColor": { "type": "string", "example": "#1e293b" },
+          "accentColor": { "type": "string", "example": "#3b82f6" },
+          "logo": { "$ref": "#/components/schemas/LogoOptionsDto" },
+          "footer": { "$ref": "#/components/schemas/FooterOptionsDto" },
+          "locale": { "type": "string", "example": "fr-FR" }
+        }
+      },
+      "LogoOptionsDto": {
+        "type": "object",
+        "properties": {
+          "url": { "type": "string", "example": "https://cdn.mysite.com/logo.png" },
+          "width": { "type": "integer", "example": 150 },
+          "align": { "type": "string", "example": "left" }
+        }
+      },
+      "FooterOptionsDto": {
+        "type": "object",
+        "properties": {
+          "extraText": { "type": "string", "example": "Merci de votre confiance." },
+          "showPageNumbers": { "type": "boolean", "example": true }
         }
       }
     },

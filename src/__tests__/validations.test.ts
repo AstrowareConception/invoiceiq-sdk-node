@@ -1,6 +1,6 @@
 import { ValidationsResource } from '../resources/validations';
 import { HttpClient } from '../client';
-import * as nock from 'nock';
+import nock from 'nock';
 import * as path from 'path';
 
 describe('ValidationsResource', () => {

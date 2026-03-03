@@ -1,7 +1,7 @@
 import { HttpClient } from '../client';
 import { ValidationJob, PaginatedResponse, ListOptions, ValidationReport } from '../types';
 import * as fs from 'fs';
-import * as FormData from 'form-data';
+import FormData from 'form-data';
 
 export class ValidationsResource {
   constructor(private client: HttpClient) {}

@@ -145,6 +145,8 @@ const list = await client.validations.list({ page: 1, limit: 10 });
 
 Transformez un PDF simple en PDF Factur-X en ajoutant les métadonnées XML.
 
+> **Note importante** : L'objet `rendering` n'est **pas supporté** dans les transformations. Il est uniquement disponible pour les générations.
+
 ```typescript
 const metadata = {
   invoiceNumber: 'INV-2024-001',
@@ -170,8 +172,10 @@ const metadata = {
       id: '1',
       name: 'Service Cloud',
       quantity: 1,
+      unitCode: 'C62',
       netPrice: 100.0,
       taxRate: 20.0,
+      taxCategoryCode: 'S',
       totalAmount: 100.0,
     },
   ],
@@ -224,8 +228,10 @@ const metadata = {
       id: '1',
       name: 'Abonnement Premium',
       quantity: 1,
+      unitCode: 'C62',
       netPrice: 1000.0,
       taxRate: 20.0,
+      taxCategoryCode: 'S',
       totalAmount: 1000.0,
     },
   ],
